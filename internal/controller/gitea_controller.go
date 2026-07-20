@@ -1141,7 +1141,8 @@ func (r *GiteaReconciler) detectClusterDomain(ctx context.Context, gitea *hyperv
 	}
 	ip, err := r.getCertManagerIp(ctx)
 	if err != nil {
-		return "", err
+		logger.Info("could not discover cert-manager pod, using default cluster domain", "error", err)
+		ip = ""
 	}
 
 	if ip != "" {

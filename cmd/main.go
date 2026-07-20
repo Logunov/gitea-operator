@@ -113,14 +113,14 @@ func main() {
 		TLSOpts: tlsOpts,
 	})
 
-	var namespaces = []string{
-		"default",
-		"cert-manager",
-	}
-	defaultNamespaces := make(map[string]cache.Config)
+	watchNamespace := os.Getenv("WATCH_NAMESPACE")
+	var defaultNamespaces map[string]cache.Config
 
-	for _, ns := range namespaces {
-		defaultNamespaces[ns] = cache.Config{}
+	if watchNamespace != "" {
+		setupLog.Info("watching single namespace", "namespace", watchNamespace)
+		defaultNamespaces = map[string]cache.Config{
+			watchNamespace: {},
+		}
 	}
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
