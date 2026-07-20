@@ -123,6 +123,7 @@ type GiteaReconciler struct {
 // +kubebuilder:rbac:groups=postgresql.cnpg.io,resources=clusters,verbs=create;delete;get;list;watch
 // +kubebuilder:rbac:groups=networking.k8s.io,resources=ingresses,verbs=create;delete;get;list;watch
 // +kubebuilder:rbac:groups=core,resources=events,verbs=create;patch
+// +kubebuilder:rbac:groups=events.k8s.io,resources=events,verbs=create;patch
 // +kubebuilder:rbac:groups=policy,resources=poddisruptionbudgets,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=monitoring.coreos.com,resources=servicemonitors,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=rolebindings;roles,verbs=create;delete;get;list;watch
@@ -293,7 +294,7 @@ mkdir -p /data/git/.ssh
 chmod -R 700 /data/git/.ssh
 mkdir -p /data/ssh
 chmod -R 700 /data/
-chown 1000 -R /data 
+chown 1000 -R /data
 [ ! -d /data/gitea/conf ] && mkdir -p /data/gitea/conf
 
 # prepare temp directory structure
@@ -443,7 +444,7 @@ echo '==== END GITEA CONFIGURATION ===='`,
         # skip empty line
         return
       fi
-      
+
       # 'xargs echo -n' trims all leading/trailing whitespaces and a trailing new line
       local setting="$(awk -F '=' '{print $1}' <<< "${line}" | xargs echo -n)"
 
@@ -552,10 +553,10 @@ echo '==== END GITEA CONFIGURATION ===='`,
 
       env2ini::log "...Initial secrets generated\n"
     }
-    
+
     # save existing envs prior to script execution. Necessary to keep order of preexisting and custom envs
     env | (grep -e '^GITEA__' || [[ $? == 1 ]]) > /tmp/existing-envs
-    
+
     # MUST BE CALLED BEFORE OTHER CONFIGURATION
     env2ini::generate_initial_secrets
 
@@ -581,7 +582,7 @@ echo '==== END GITEA CONFIGURATION ===='`,
       unset GITEA__SERVER__LFS_JWT_SECRET
     fi
 
-    environment-to-ini -o $GITEA_APP_INI`,
+    environment-to-ini --config "$GITEA_APP_INI" --out "$GITEA_APP_INI" --apply-env`,
 	}, false); err != nil {
 		return ctrl.Result{}, err
 	}
@@ -626,6 +627,11 @@ func (r *GiteaReconciler) upsertCNPG(ctx context.Context, gitea *hyperv1.Gitea) 
 	l := labels(gitea.Name)
 	l["app.kubernetes.io/component"] = DATABASE
 
+	dbSize := "1Gi"
+	if gitea.Spec.Storage != nil && gitea.Spec.Storage.DatabaseSize != "" {
+		dbSize = gitea.Spec.Storage.DatabaseSize
+	}
+
 	cnpg := &cnpgv1.Cluster{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      gitea.Name + "-db",
@@ -636,7 +642,7 @@ func (r *GiteaReconciler) upsertCNPG(ctx context.Context, gitea *hyperv1.Gitea) 
 			Instances: 2,
 			ImageName: "ghcr.io/cloudnative-pg/postgresql:17",
 			StorageConfiguration: cnpgv1.StorageConfiguration{
-				Size: "15Gi",
+				Size: dbSize,
 			},
 			Bootstrap: &cnpgv1.BootstrapConfiguration{
 				InitDB: &cnpgv1.BootstrapInitDB{
@@ -709,6 +715,12 @@ func (r *GiteaReconciler) upsertPG(ctx context.Context, gitea *hyperv1.Gitea) er
 	}
 	l := labels(gitea.Name)
 	l["app.kubernetes.io/component"] = DATABASE
+
+	dbSize := "1Gi"
+	if gitea.Spec.Storage != nil && gitea.Spec.Storage.DatabaseSize != "" {
+		dbSize = gitea.Spec.Storage.DatabaseSize
+	}
+
 	pg := &zalandov1.Postgresql{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      gitea.Name + "-" + gitea.Name,
@@ -718,7 +730,7 @@ func (r *GiteaReconciler) upsertPG(ctx context.Context, gitea *hyperv1.Gitea) er
 		Spec: zalandov1.PostgresSpec{
 			TeamID: gitea.Name,
 			Volume: zalandov1.Volume{
-				Size: "15Gi",
+				Size: dbSize,
 			},
 			NumberOfInstances: int32(2),
 			Resources: &zalandov1.Resources{
@@ -2051,7 +2063,11 @@ func (r *GiteaReconciler) upsertPDB(ctx context.Context, gitea *hyperv1.Gitea) e
 
 func (r *GiteaReconciler) upsertGiteaSts(ctx context.Context, gitea *hyperv1.Gitea) error {
 	logger := log.FromContext(ctx)
-	disk := resource.NewQuantity(50*1024*1024*1024, resource.BinarySI)
+	giteaSize := "1Gi"
+	if gitea.Spec.Storage != nil && gitea.Spec.Storage.GiteaSize != "" {
+		giteaSize = gitea.Spec.Storage.GiteaSize
+	}
+	disk := resource.MustParse(giteaSize)
 	scheme := corev1.URISchemeHTTP
 	if gitea.Spec.TLS {
 		scheme = corev1.URISchemeHTTPS
@@ -2075,7 +2091,7 @@ func (r *GiteaReconciler) upsertGiteaSts(ctx context.Context, gitea *hyperv1.Git
 						AccessModes: []corev1.PersistentVolumeAccessMode{"ReadWriteOnce"},
 						Resources: corev1.VolumeResourceRequirements{
 							Requests: corev1.ResourceList{
-								"storage": *disk,
+								"storage": disk,
 							},
 						},
 					},

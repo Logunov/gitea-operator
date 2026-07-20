@@ -51,7 +51,7 @@ type GiteaSpec struct {
 	PrometheusLabels map[string]string `json:"prometheusLabels,omitempty"`
 
 	// Override the operator set image
-	// +kubebuilder:default:="gitea/gitea:1.26.2"
+	// +kubebuilder:default:="gitea/gitea:1.26.4"
 	Image string `json:"image,omitempty"`
 
 	// Use Valkey
@@ -72,8 +72,19 @@ type GiteaSpec struct {
 
 	ClusterDomain string `json:"clusterDomain,omitempty"`
 
+	// Storage configuration for Gitea and database volumes
+	Storage *StorageSpec `json:"storage,omitempty"`
+
 	// Postgres Configuration
 	Postgres PostgresSpec `json:"postgres,omitempty"`
+}
+
+type StorageSpec struct {
+	// Gitea data volume size (defaults to "1Gi")
+	GiteaSize string `json:"giteaSize,omitempty"`
+
+	// Database volume size (defaults to "1Gi")
+	DatabaseSize string `json:"databaseSize,omitempty"`
 }
 
 type PostgresSpec struct {
