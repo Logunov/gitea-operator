@@ -864,7 +864,7 @@ func (r *GiteaReconciler) upsertPG(ctx context.Context, gitea *hyperv1.Gitea) er
 		return err
 	} else {
 		// Postgres cluster exists — expand storage if needed
-		existingSize := pg.Spec.Volume.Size
+		existingSize := pg.Spec.Size
 		if dbSize != existingSize {
 			existingQty, err := resource.ParseQuantity(existingSize)
 			if err != nil {
@@ -873,7 +873,7 @@ func (r *GiteaReconciler) upsertPG(ctx context.Context, gitea *hyperv1.Gitea) er
 			}
 			desiredQty, _ := resource.ParseQuantity(dbSize)
 			if desiredQty.Cmp(existingQty) > 0 {
-				pg.Spec.Volume.Size = dbSize
+				pg.Spec.Size = dbSize
 				if err := r.Update(ctx, pg); err != nil {
 					logger.Error(err, "failed to update PG storage")
 					return err
