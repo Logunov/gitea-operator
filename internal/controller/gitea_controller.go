@@ -1792,7 +1792,11 @@ func image(gitea *hyperv1.Gitea) string {
 }
 
 func imageSpoon() string {
-	return "ghcr.io/hyperspike/gitea-spoon:v0.0.5"
+	img := os.Getenv("GITEA_SPOON_IMAGE")
+	if img != "" {
+		return img
+	}
+	return "ghcr.io/logunov/gitea-spoon:latest"
 }
 
 var vol = map[string]string{
@@ -2181,9 +2185,19 @@ func (r *GiteaReconciler) upsertGiteaSts(ctx context.Context, gitea *hyperv1.Git
 							},
 						},
 						{
-							Name:         "gitea-spoon",
-							Image:        imageSpoon(),
-							Env:          env(map[string]string{"HOME": "/data/gitea/git", "TMPDIR": "/tmp/gitea"}),
+							Name:  "gitea-spoon",
+							Image: imageSpoon(),
+							Env: envUpsert(
+								env(map[string]string{"HOME": "/data/gitea/git", "TMPDIR": "/tmp/gitea"}),
+								corev1.EnvVar{
+									Name: "WATCH_NAMESPACE",
+									ValueFrom: &corev1.EnvVarSource{
+										FieldRef: &corev1.ObjectFieldSelector{
+											FieldPath: "metadata.namespace",
+										},
+									},
+								},
+							),
 							VolumeMounts: volumes(nil),
 							Command: []string{
 								"/manager",
