@@ -22,123 +22,121 @@ spec:
     singular: auth
   scope: Namespaced
   versions:
-    - name: v1
-      schema:
-        openAPIV3Schema:
-          description: Auth is the Schema for the auths API
-          properties:
-            apiVersion:
-              description: |-
-                APIVersion defines the versioned schema of this representation of an object.
-                Servers should convert recognized schemas to the latest internal value, and
-                may reject unrecognized values.
-                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-              type: string
-            kind:
-              description: |-
-                Kind is a string value representing the REST resource this object represents.
-                Servers may infer this from the endpoint the client submits requests to.
-                Cannot be updated.
-                In CamelCase.
-                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-              type: string
-            metadata:
-              type: object
-            spec:
-              description: AuthSpec defines the desired state of Auth
-              properties:
-                autoDiscoveryURL:
-                  description: The URL to the OIDC provider (e.g. https://oidc.example.com)
-                  type: string
-                clientID:
-                  description: The client ID for the OIDC provider
-                  properties:
-                    key:
-                      description:
-                        The key of the secret to select from.  Must be a
-                        valid secret key.
-                      type: string
-                    name:
-                      default: ""
-                      description: |-
-                        Name of the referent.
-                        This field is effectively required, but due to backwards compatibility is
-                        allowed to be empty. Instances of this type with an empty value here are
-                        almost certainly wrong.
-                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      type: string
-                    optional:
-                      description: Specify whether the Secret or its key must be defined
-                      type: boolean
-                  required:
-                    - key
-                  type: object
-                  x-kubernetes-map-type: atomic
-                clientSecret:
-                  description: The client secret for the OIDC provider
-                  properties:
-                    key:
-                      description:
-                        The key of the secret to select from.  Must be a
-                        valid secret key.
-                      type: string
-                    name:
-                      default: ""
-                      description: |-
-                        Name of the referent.
-                        This field is effectively required, but due to backwards compatibility is
-                        allowed to be empty. Instances of this type with an empty value here are
-                        almost certainly wrong.
-                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      type: string
-                    optional:
-                      description: Specify whether the Secret or its key must be defined
-                      type: boolean
-                  required:
-                    - key
-                  type: object
-                  x-kubernetes-map-type: atomic
-                groupClaimName:
-                  description: Group Claim name to use for group membership
-                  type: string
-                instance:
-                  description: The Gitea instance to add the OIDC authentication to
-                  properties:
-                    labels:
-                      additionalProperties:
-                        type: string
-                      type: object
-                    name:
-                      type: string
-                    namespace:
-                      type: string
-                  required:
-                    - name
-                  type: object
-                provider:
-                  type: string
-                scopes:
-                  description: Scopes to request from the OIDC provider
-                  items:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: Auth is the Schema for the auths API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AuthSpec defines the desired state of Auth
+            properties:
+              autoDiscoveryURL:
+                description: The URL to the OIDC provider (e.g. https://oidc.example.com)
+                type: string
+              clientID:
+                description: The client ID for the OIDC provider
+                properties:
+                  key:
+                    description: The key of the secret to select from.  Must be a
+                      valid secret key.
                     type: string
-                  type: array
-              required:
-                - autoDiscoveryURL
-                - clientID
-                - clientSecret
-                - groupClaimName
-                - instance
-                - provider
-                - scopes
-              type: object
-            status:
-              description: AuthStatus defines the observed state of Auth
-              type: object
-          type: object
-      served: true
-      storage: true
-      subresources:
-        status: {}
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                  optional:
+                    description: Specify whether the Secret or its key must be defined
+                    type: boolean
+                required:
+                - key
+                type: object
+                x-kubernetes-map-type: atomic
+              clientSecret:
+                description: The client secret for the OIDC provider
+                properties:
+                  key:
+                    description: The key of the secret to select from.  Must be a
+                      valid secret key.
+                    type: string
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                  optional:
+                    description: Specify whether the Secret or its key must be defined
+                    type: boolean
+                required:
+                - key
+                type: object
+                x-kubernetes-map-type: atomic
+              groupClaimName:
+                description: Group Claim name to use for group membership
+                type: string
+              instance:
+                description: The Gitea instance to add the OIDC authentication to
+                properties:
+                  labels:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                required:
+                - name
+                type: object
+              provider:
+                type: string
+              scopes:
+                description: Scopes to request from the OIDC provider
+                items:
+                  type: string
+                type: array
+            required:
+            - autoDiscoveryURL
+            - clientID
+            - clientSecret
+            - groupClaimName
+            - instance
+            - provider
+            - scopes
+            type: object
+          status:
+            description: AuthStatus defines the observed state of Auth
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -155,209 +153,218 @@ spec:
     singular: gitea
   scope: Namespaced
   versions:
-    - additionalPrinterColumns:
-        - jsonPath: .status.ready
-          name: Ready
-          type: boolean
-        - jsonPath: .metadata.creationTimestamp
-          name: Age
-          type: date
-        - jsonPath: .spec.hostname
-          name: Hostname
-          priority: 1
-          type: string
-        - jsonPath: .spec.rootless
-          name: Rootless
-          priority: 1
-          type: boolean
-        - jsonPath: .spec.image
-          name: Image
-          priority: 1
-          type: string
-      name: v1
-      schema:
-        openAPIV3Schema:
-          description: Gitea is the Schema for the gitea API
-          properties:
-            apiVersion:
-              description: |-
-                APIVersion defines the versioned schema of this representation of an object.
-                Servers should convert recognized schemas to the latest internal value, and
-                may reject unrecognized values.
-                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-              type: string
-            kind:
-              description: |-
-                Kind is a string value representing the REST resource this object represents.
-                Servers may infer this from the endpoint the client submits requests to.
-                Cannot be updated.
-                In CamelCase.
-                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-              type: string
-            metadata:
-              type: object
-            spec:
-              description: GiteaSpec defines the desired state of Gitea
-              properties:
-                certIssuer:
-                  description: TLS Cert-manager Issuer
-                  type: string
-                certIssuerType:
-                  default: ClusterIssuer
-                  description: Cert-Manger Cluster Issuer Kind
-                  enum:
-                    - ClusterIssuer
-                    - Issuer
-                  type: string
-                clusterDomain:
-                  type: string
-                externalSSH:
-                  description: Create a loadbalancer for ssh access
-                  type: boolean
-                image:
-                  default: gitea/gitea:1.26.4
-                  description: Override the operator set image
-                  type: string
-                ingress:
-                  description: Ingress for external access
-                  properties:
-                    annotations:
-                      additionalProperties:
-                        type: string
-                      description: Ingress Annotations
-                      type: object
-                    host:
-                      description: External Hostname of the instance
-                      example: git.local
+  - additionalPrinterColumns:
+    - jsonPath: .status.ready
+      name: Ready
+      type: boolean
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    - jsonPath: .spec.hostname
+      name: Hostname
+      priority: 1
+      type: string
+    - jsonPath: .spec.rootless
+      name: Rootless
+      priority: 1
+      type: boolean
+    - jsonPath: .spec.image
+      name: Image
+      priority: 1
+      type: string
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: Gitea is the Schema for the gitea API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: GiteaSpec defines the desired state of Gitea
+            properties:
+              certIssuer:
+                description: TLS Cert-manager Issuer
+                type: string
+              certIssuerType:
+                default: ClusterIssuer
+                description: Cert-Manger Cluster Issuer Kind
+                enum:
+                - ClusterIssuer
+                - Issuer
+                type: string
+              clusterDomain:
+                type: string
+              externalSSH:
+                description: Create a loadbalancer for ssh access
+                type: boolean
+              image:
+                default: gitea/gitea:1.26.4
+                description: Override the operator set image
+                type: string
+              ingress:
+                description: Ingress for external access
+                properties:
+                  annotations:
+                    additionalProperties:
                       type: string
-                  type: object
-                objectStorage:
-                  description: Object Storage for Gitea
+                    description: Ingress Annotations
+                    type: object
+                  host:
+                    description: External Hostname of the instance
+                    example: git.local
+                    type: string
+                type: object
+              objectStorage:
+                description: Object Storage for Gitea
+                properties:
+                  endpoint:
+                    description: Object Storage Endpoint
+                    type: string
+                  region:
+                    description: Object Cloud Provider Region
+                    type: string
+                  type:
+                    default: minio
+                    description: Object Storage Type
+                    enum:
+                    - minio
+                    - gcs
+                    - s3
+                    type: string
+                type: object
+              postgres:
+                description: Postgres Configuration
+                properties:
+                  provider:
+                    default: zalando
+                    description: Postgres Provider
+                    enum:
+                    - zalando
+                    - cnpg
+                    type: string
+                type: object
+              prometheus:
+                default: false
+                description: enable prometheus integrations
+                type: boolean
+              prometheusLabels:
+                additionalProperties:
+                  type: string
+                description: Additional Prometheus Labels
+                type: object
+              rootless:
+                default: false
+                description: enable rootless mode, disable for minikube
+                type: boolean
+              sshHostname:
+                description: if different from Hostname
+                type: string
+              storage:
+                description: Storage configuration for Gitea and database volumes
+                properties:
+                  databaseSize:
+                    description: Database volume size (defaults to "1Gi")
+                    type: string
+                  giteaSize:
+                    description: Gitea data volume size (defaults to "1Gi")
+                    type: string
+                type: object
+              tls:
+                default: false
+                description: Use TLS
+                type: boolean
+              valkey:
+                default: false
+                description: Use Valkey
+                type: boolean
+            type: object
+          status:
+            description: GiteaStatus defines the observed state of Gitea
+            properties:
+              conditions:
+                description: |-
+                  INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
+                  Important: Run "make" to regenerate code after modifying this file
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
                   properties:
-                    endpoint:
-                      description: Object Storage Endpoint
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
                       type: string
-                    region:
-                      description: Object Cloud Provider Region
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
                       type: string
                     type:
-                      default: minio
-                      description: Object Storage Type
-                      enum:
-                        - minio
-                        - gcs
-                        - s3
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
                       type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
                   type: object
-                postgres:
-                  description: Postgres Configuration
-                  properties:
-                    provider:
-                      default: zalando
-                      description: Postgres Provider
-                      enum:
-                        - zalando
-                        - cnpg
-                      type: string
-                  type: object
-                prometheus:
-                  default: false
-                  description: enable prometheus integrations
-                  type: boolean
-                prometheusLabels:
-                  additionalProperties:
-                    type: string
-                  description: Additional Prometheus Labels
-                  type: object
-                rootless:
-                  default: false
-                  description: enable rootless mode, disable for minikube
-                  type: boolean
-                sshHostname:
-                  description: if different from Hostname
-                  type: string
-                tls:
-                  default: false
-                  description: Use TLS
-                  type: boolean
-                valkey:
-                  default: false
-                  description: Use Valkey
-                  type: boolean
-              type: object
-            status:
-              description: GiteaStatus defines the observed state of Gitea
-              properties:
-                conditions:
-                  description: |-
-                    INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-                    Important: Run "make" to regenerate code after modifying this file
-                  items:
-                    description:
-                      Condition contains details for one aspect of the current
-                      state of this API Resource.
-                    properties:
-                      lastTransitionTime:
-                        description: |-
-                          lastTransitionTime is the last time the condition transitioned from one status to another.
-                          This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
-                        format: date-time
-                        type: string
-                      message:
-                        description: |-
-                          message is a human readable message indicating details about the transition.
-                          This may be an empty string.
-                        maxLength: 32768
-                        type: string
-                      observedGeneration:
-                        description: |-
-                          observedGeneration represents the .metadata.generation that the condition was set based upon.
-                          For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
-                          with respect to the current state of the instance.
-                        format: int64
-                        minimum: 0
-                        type: integer
-                      reason:
-                        description: |-
-                          reason contains a programmatic identifier indicating the reason for the condition's last transition.
-                          Producers of specific condition types may define expected values and meanings for this field,
-                          and whether the values are considered a guaranteed API.
-                          The value should be a CamelCase string.
-                          This field may not be empty.
-                        maxLength: 1024
-                        minLength: 1
-                        pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
-                        type: string
-                      status:
-                        description: status of the condition, one of True, False, Unknown.
-                        enum:
-                          - "True"
-                          - "False"
-                          - Unknown
-                        type: string
-                      type:
-                        description: type of condition in CamelCase or in foo.example.com/CamelCase.
-                        maxLength: 316
-                        pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
-                        type: string
-                    required:
-                      - lastTransitionTime
-                      - message
-                      - reason
-                      - status
-                      - type
-                    type: object
-                  type: array
-                ready:
-                  type: boolean
-              required:
-                - ready
-              type: object
-          type: object
-      served: true
-      storage: true
-      subresources:
-        status: {}
+                type: array
+              ready:
+                type: boolean
+            required:
+            - ready
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -374,162 +381,161 @@ spec:
     singular: migraterepo
   scope: Namespaced
   versions:
-    - name: v1
-      schema:
-        openAPIV3Schema:
-          description: MigrateRepo is the Schema for the migraterepoes API
-          properties:
-            apiVersion:
-              description: |-
-                APIVersion defines the versioned schema of this representation of an object.
-                Servers should convert recognized schemas to the latest internal value, and
-                may reject unrecognized values.
-                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-              type: string
-            kind:
-              description: |-
-                Kind is a string value representing the REST resource this object represents.
-                Servers may infer this from the endpoint the client submits requests to.
-                Cannot be updated.
-                In CamelCase.
-                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-              type: string
-            metadata:
-              type: object
-            spec:
-              description: spec defines the desired state of MigrateRepo
-              properties:
-                description:
-                  description: Description is the description of the repository.
-                  type: string
-                mirror:
-                  description: Mirror indicates whether to mirror the repository.
-                  type: boolean
-                org:
-                  properties:
-                    labels:
-                      additionalProperties:
-                        type: string
-                      type: object
-                    name:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: MigrateRepo is the Schema for the migraterepoes API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: spec defines the desired state of MigrateRepo
+            properties:
+              description:
+                description: Description is the description of the repository.
+                type: string
+              mirror:
+                description: Mirror indicates whether to mirror the repository.
+                type: boolean
+              org:
+                properties:
+                  labels:
+                    additionalProperties:
                       type: string
-                    namespace:
-                      type: string
-                  required:
-                    - name
-                  type: object
-                private:
-                  description: Private indicates whether the repository is private.
-                  type: boolean
-                service:
-                  description: Service The service to pull from
-                  enum:
-                    - git
-                    - github
-                    - gitlab
-                    - gogs
-                    - gitea
-                  type: string
-                url:
-                  description: URL is the source URL of the repository to migrate.
-                  type: string
-                user:
-                  properties:
-                    labels:
-                      additionalProperties:
-                        type: string
-                      type: object
-                    name:
-                      type: string
-                    namespace:
-                      type: string
-                  required:
-                    - name
-                  type: object
-              required:
-                - url
-              type: object
-            status:
-              description: status defines the observed state of MigrateRepo
-              properties:
-                conditions:
-                  description: |-
-                    conditions represent the current state of the MigrateRepo resource.
-                    Each condition has a unique type and reflects the status of a specific aspect of the resource.
-
-                    Standard condition types include:
-                    - "Available": the resource is fully functional
-                    - "Progressing": the resource is being created or updated
-                    - "Degraded": the resource failed to reach or maintain its desired state
-
-                    The status of each condition is one of True, False, or Unknown.
-                  items:
-                    description:
-                      Condition contains details for one aspect of the current
-                      state of this API Resource.
-                    properties:
-                      lastTransitionTime:
-                        description: |-
-                          lastTransitionTime is the last time the condition transitioned from one status to another.
-                          This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
-                        format: date-time
-                        type: string
-                      message:
-                        description: |-
-                          message is a human readable message indicating details about the transition.
-                          This may be an empty string.
-                        maxLength: 32768
-                        type: string
-                      observedGeneration:
-                        description: |-
-                          observedGeneration represents the .metadata.generation that the condition was set based upon.
-                          For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
-                          with respect to the current state of the instance.
-                        format: int64
-                        minimum: 0
-                        type: integer
-                      reason:
-                        description: |-
-                          reason contains a programmatic identifier indicating the reason for the condition's last transition.
-                          Producers of specific condition types may define expected values and meanings for this field,
-                          and whether the values are considered a guaranteed API.
-                          The value should be a CamelCase string.
-                          This field may not be empty.
-                        maxLength: 1024
-                        minLength: 1
-                        pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
-                        type: string
-                      status:
-                        description: status of the condition, one of True, False, Unknown.
-                        enum:
-                          - "True"
-                          - "False"
-                          - Unknown
-                        type: string
-                      type:
-                        description: type of condition in CamelCase or in foo.example.com/CamelCase.
-                        maxLength: 316
-                        pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
-                        type: string
-                    required:
-                      - lastTransitionTime
-                      - message
-                      - reason
-                      - status
-                      - type
                     type: object
-                  type: array
-                  x-kubernetes-list-map-keys:
-                    - type
-                  x-kubernetes-list-type: map
-              type: object
-          required:
-            - spec
-          type: object
-      served: true
-      storage: true
-      subresources:
-        status: {}
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                required:
+                - name
+                type: object
+              private:
+                description: Private indicates whether the repository is private.
+                type: boolean
+              service:
+                description: Service The service to pull from
+                enum:
+                - git
+                - github
+                - gitlab
+                - gogs
+                - gitea
+                type: string
+              url:
+                description: URL is the source URL of the repository to migrate.
+                type: string
+              user:
+                properties:
+                  labels:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - url
+            type: object
+          status:
+            description: status defines the observed state of MigrateRepo
+            properties:
+              conditions:
+                description: |-
+                  conditions represent the current state of the MigrateRepo resource.
+                  Each condition has a unique type and reflects the status of a specific aspect of the resource.
+
+                  Standard condition types include:
+                  - "Available": the resource is fully functional
+                  - "Progressing": the resource is being created or updated
+                  - "Degraded": the resource failed to reach or maintain its desired state
+
+                  The status of each condition is one of True, False, or Unknown.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -546,115 +552,115 @@ spec:
     singular: org
   scope: Namespaced
   versions:
-    - additionalPrinterColumns:
-        - jsonPath: .status.provisioned
-          name: Ready
-          type: boolean
-        - jsonPath: .metadata.creationTimestamp
-          name: Age
-          type: date
-      name: v1
-      schema:
-        openAPIV3Schema:
-          description: Org is the Schema for the orgs API
-          properties:
-            apiVersion:
-              description: |-
-                APIVersion defines the versioned schema of this representation of an object.
-                Servers should convert recognized schemas to the latest internal value, and
-                may reject unrecognized values.
-                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-              type: string
-            kind:
-              description: |-
-                Kind is a string value representing the REST resource this object represents.
-                Servers may infer this from the endpoint the client submits requests to.
-                Cannot be updated.
-                In CamelCase.
-                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-              type: string
-            metadata:
-              type: object
-            spec:
-              description: OrgSpec defines the desired state of Org
-              properties:
-                description:
-                  description: A brief explanation of the organization.
-                  type: string
-                fullname:
-                  description: The human readable name of the organization.
-                  type: string
-                instance:
-                  description: the gitea instance to build the org in
+  - additionalPrinterColumns:
+    - jsonPath: .status.provisioned
+      name: Ready
+      type: boolean
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: Org is the Schema for the orgs API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: OrgSpec defines the desired state of Org
+            properties:
+              description:
+                description: A brief explanation of the organization.
+                type: string
+              fullname:
+                description: The human readable name of the organization.
+                type: string
+              instance:
+                description: the gitea instance to build the org in
+                properties:
+                  labels:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                required:
+                - name
+                type: object
+              location:
+                description: The physical location of the org, if any
+                type: string
+              teams:
+                description: users list to
+                items:
                   properties:
-                    labels:
-                      additionalProperties:
+                    createOrgRepo:
+                      type: boolean
+                    description:
+                      type: string
+                    includeAllRepos:
+                      type: boolean
+                    members:
+                      items:
                         type: string
-                      type: object
+                      type: array
                     name:
                       type: string
-                    namespace:
+                    permission:
+                      enum:
+                      - none
+                      - read
+                      - write
+                      - admin
+                      - owner
                       type: string
+                    units:
+                      items:
+                        type: string
+                      type: array
                   required:
-                    - name
+                  - name
                   type: object
-                location:
-                  description: The physical location of the org, if any
-                  type: string
-                teams:
-                  description: users list to
-                  items:
-                    properties:
-                      createOrgRepo:
-                        type: boolean
-                      description:
-                        type: string
-                      includeAllRepos:
-                        type: boolean
-                      members:
-                        items:
-                          type: string
-                        type: array
-                      name:
-                        type: string
-                      permission:
-                        enum:
-                          - none
-                          - read
-                          - write
-                          - admin
-                          - owner
-                        type: string
-                      units:
-                        items:
-                          type: string
-                        type: array
-                    required:
-                      - name
-                    type: object
-                  type: array
-                visibility:
-                  description: The ACL name of the org. public, private, etc.
-                  type: string
-                website:
-                  description: The url of the website associated with this org.
-                  type: string
-              required:
-                - instance
-              type: object
-            status:
-              description: OrgStatus defines the observed state of Org
-              properties:
-                provisioned:
-                  type: boolean
-              required:
-                - provisioned
-              type: object
-          type: object
-      served: true
-      storage: true
-      subresources:
-        status: {}
+                type: array
+              visibility:
+                description: The ACL name of the org. public, private, etc.
+                type: string
+              website:
+                description: The url of the website associated with this org.
+                type: string
+            required:
+            - instance
+            type: object
+          status:
+            description: OrgStatus defines the observed state of Org
+            properties:
+              provisioned:
+                type: boolean
+            required:
+            - provisioned
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -671,135 +677,134 @@ spec:
     singular: repo
   scope: Namespaced
   versions:
-    - additionalPrinterColumns:
-        - jsonPath: .status.provisioned
-          name: Ready
-          type: boolean
-        - jsonPath: .metadata.creationTimestamp
-          name: Age
-          type: date
-      name: v1
-      schema:
-        openAPIV3Schema:
-          description: Repo is the Schema for the repoes API
-          properties:
-            apiVersion:
-              description: |-
-                APIVersion defines the versioned schema of this representation of an object.
-                Servers should convert recognized schemas to the latest internal value, and
-                may reject unrecognized values.
-                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-              type: string
-            kind:
-              description: |-
-                Kind is a string value representing the REST resource this object represents.
-                Servers may infer this from the endpoint the client submits requests to.
-                Cannot be updated.
-                In CamelCase.
-                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-              type: string
-            metadata:
-              type: object
-            spec:
-              description: RepoSpec defines the desired state of Repo
-              properties:
-                auto_init:
-                  description: Whether the repository should be auto-intialized?
-                  type: boolean
-                default_branch:
-                  description:
-                    DefaultBranch of the repository (used when initializes
-                    and in template)
-                  type: string
-                description:
-                  description: a brief explanation of the repo
-                  type: string
-                gitignores:
-                  description: Gitignores to use
-                  type: string
-                issue_labels:
-                  description: Issue Label set to use
-                  type: string
-                license:
-                  description: License to use
-                  type: string
-                org:
-                  properties:
-                    labels:
-                      additionalProperties:
-                        type: string
-                      type: object
-                    name:
+  - additionalPrinterColumns:
+    - jsonPath: .status.provisioned
+      name: Ready
+      type: boolean
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: Repo is the Schema for the repoes API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RepoSpec defines the desired state of Repo
+            properties:
+              auto_init:
+                description: Whether the repository should be auto-intialized?
+                type: boolean
+              default_branch:
+                description: DefaultBranch of the repository (used when initializes
+                  and in template)
+                type: string
+              description:
+                description: a brief explanation of the repo
+                type: string
+              gitignores:
+                description: Gitignores to use
+                type: string
+              issue_labels:
+                description: Issue Label set to use
+                type: string
+              license:
+                description: License to use
+                type: string
+              org:
+                properties:
+                  labels:
+                    additionalProperties:
                       type: string
-                    namespace:
+                    type: object
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                required:
+                - name
+                type: object
+              private:
+                description: Whether the repository is private
+                type: boolean
+              push_mirror:
+                description: Mirror settings
+                properties:
+                  enable:
+                    description: Whether to mirror the repository
+                    type: boolean
+                  interval:
+                    description: Interval for mirroring the repository
+                    type: string
+                  password:
+                    description: Password for authentication
+                    type: string
+                  remote_url:
+                    description: Remote URL for the mirror
+                    type: string
+                  sync_on_commit:
+                    description: SyncOnCommit indicates whether to sync on every commit
+                    type: boolean
+                  user_name:
+                    description: UserName for authentication
+                    type: string
+                type: object
+              readme:
+                description: Readme of the repository to create
+                type: string
+              template:
+                description: Whether the repository is template
+                type: boolean
+              trust_model:
+                description: TrustModel of the repository
+                type: string
+              user:
+                properties:
+                  labels:
+                    additionalProperties:
                       type: string
-                  required:
-                    - name
-                  type: object
-                private:
-                  description: Whether the repository is private
-                  type: boolean
-                push_mirror:
-                  description: Mirror settings
-                  properties:
-                    enable:
-                      description: Whether to mirror the repository
-                      type: boolean
-                    interval:
-                      description: Interval for mirroring the repository
-                      type: string
-                    password:
-                      description: Password for authentication
-                      type: string
-                    remote_url:
-                      description: Remote URL for the mirror
-                      type: string
-                    sync_on_commit:
-                      description: SyncOnCommit indicates whether to sync on every commit
-                      type: boolean
-                    user_name:
-                      description: UserName for authentication
-                      type: string
-                  type: object
-                readme:
-                  description: Readme of the repository to create
-                  type: string
-                template:
-                  description: Whether the repository is template
-                  type: boolean
-                trust_model:
-                  description: TrustModel of the repository
-                  type: string
-                user:
-                  properties:
-                    labels:
-                      additionalProperties:
-                        type: string
-                      type: object
-                    name:
-                      type: string
-                    namespace:
-                      type: string
-                  required:
-                    - name
-                  type: object
-              type: object
-            status:
-              description: RepoStatus defines the observed state of Repo
-              properties:
-                provisioned:
-                  description: |-
-                    INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-                    Important: Run "make" to regenerate code after modifying this file
-                  type: boolean
-              required:
-                - provisioned
-              type: object
-          type: object
-      served: true
-      storage: true
-      subresources:
-        status: {}
+                    type: object
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                required:
+                - name
+                type: object
+            type: object
+          status:
+            description: RepoStatus defines the observed state of Repo
+            properties:
+              provisioned:
+                description: |-
+                  INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
+                  Important: Run "make" to regenerate code after modifying this file
+                type: boolean
+            required:
+            - provisioned
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -816,92 +821,92 @@ spec:
     singular: runner
   scope: Namespaced
   versions:
-    - additionalPrinterColumns:
-        - jsonPath: .status.provisioned
-          name: Ready
-          type: boolean
-        - jsonPath: .metadata.creationTimestamp
-          name: Age
-          type: date
-      name: v1
-      schema:
-        openAPIV3Schema:
-          description: Runner is the Schema for the runners API
-          properties:
-            apiVersion:
-              description: |-
-                APIVersion defines the versioned schema of this representation of an object.
-                Servers should convert recognized schemas to the latest internal value, and
-                may reject unrecognized values.
-                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-              type: string
-            kind:
-              description: |-
-                Kind is a string value representing the REST resource this object represents.
-                Servers may infer this from the endpoint the client submits requests to.
-                Cannot be updated.
-                In CamelCase.
-                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-              type: string
-            metadata:
-              type: object
-            spec:
-              description: RunnerSpec defines the desired state of Runner
-              properties:
-                instance:
-                  description: the gitea instance to create global runners in
-                  properties:
-                    labels:
-                      additionalProperties:
-                        type: string
-                      type: object
-                    name:
+  - additionalPrinterColumns:
+    - jsonPath: .status.provisioned
+      name: Ready
+      type: boolean
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: Runner is the Schema for the runners API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RunnerSpec defines the desired state of Runner
+            properties:
+              instance:
+                description: the gitea instance to create global runners in
+                properties:
+                  labels:
+                    additionalProperties:
                       type: string
-                    namespace:
+                    type: object
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                required:
+                - name
+                type: object
+              org:
+                description: The Gitea Org to create org runners in
+                properties:
+                  labels:
+                    additionalProperties:
                       type: string
-                  required:
-                    - name
-                  type: object
-                org:
-                  description: The Gitea Org to create org runners in
-                  properties:
-                    labels:
-                      additionalProperties:
-                        type: string
-                      type: object
-                    name:
-                      type: string
-                    namespace:
-                      type: string
-                  required:
-                    - name
-                  type: object
-                replicas:
-                  default: 1
-                  type: integer
-                rootless:
-                  default: false
-                  type: boolean
-              required:
-                - replicas
-                - rootless
-              type: object
-            status:
-              description: RunnerStatus defines the observed state of Runner
-              properties:
-                provisioned:
-                  type: boolean
-                tls:
-                  description: TLS detected at the instance deployment
-                  type: boolean
-              required:
-                - provisioned
-              type: object
-          type: object
-      served: true
-      storage: true
-      subresources:
-        status: {}
+                    type: object
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                required:
+                - name
+                type: object
+              replicas:
+                default: 1
+                type: integer
+              rootless:
+                default: false
+                type: boolean
+            required:
+            - replicas
+            - rootless
+            type: object
+          status:
+            description: RunnerStatus defines the observed state of Runner
+            properties:
+              provisioned:
+                type: boolean
+              tls:
+                description: TLS detected at the instance deployment
+                type: boolean
+            required:
+            - provisioned
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -918,116 +923,114 @@ spec:
     singular: user
   scope: Namespaced
   versions:
-    - additionalPrinterColumns:
-        - jsonPath: .status.provisioned
-          name: Ready
-          type: boolean
-        - jsonPath: .metadata.creationTimestamp
-          name: Age
-          type: date
-      name: v1
-      schema:
-        openAPIV3Schema:
-          description: User is the Schema for the users API
-          properties:
-            apiVersion:
-              description: |-
-                APIVersion defines the versioned schema of this representation of an object.
-                Servers should convert recognized schemas to the latest internal value, and
-                may reject unrecognized values.
-                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-              type: string
-            kind:
-              description: |-
-                Kind is a string value representing the REST resource this object represents.
-                Servers may infer this from the endpoint the client submits requests to.
-                Cannot be updated.
-                In CamelCase.
-                More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-              type: string
-            metadata:
-              type: object
-            spec:
-              description: UserSpec defines the desired state of User
-              properties:
-                admin:
-                  type: boolean
-                email:
-                  type: string
-                fullName:
-                  type: string
-                instance:
-                  description: the gitea instance to add the user to
-                  properties:
-                    labels:
-                      additionalProperties:
-                        type: string
-                      type: object
-                    name:
+  - additionalPrinterColumns:
+    - jsonPath: .status.provisioned
+      name: Ready
+      type: boolean
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: User is the Schema for the users API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: UserSpec defines the desired state of User
+            properties:
+              admin:
+                type: boolean
+              email:
+                type: string
+              fullName:
+                type: string
+              instance:
+                description: the gitea instance to add the user to
+                properties:
+                  labels:
+                    additionalProperties:
                       type: string
-                    namespace:
-                      type: string
-                  required:
-                    - name
-                  type: object
-                loginName:
-                  type: string
-                password:
-                  description:
-                    a secret reference to the secret where the password is
-                    stored
-                  properties:
-                    key:
-                      description:
-                        The key of the secret to select from.  Must be a
-                        valid secret key.
-                      type: string
-                    name:
-                      default: ""
-                      description: |-
-                        Name of the referent.
-                        This field is effectively required, but due to backwards compatibility is
-                        allowed to be empty. Instances of this type with an empty value here are
-                        almost certainly wrong.
-                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                      type: string
-                    optional:
-                      description: Specify whether the Secret or its key must be defined
-                      type: boolean
-                  required:
-                    - key
-                  type: object
-                  x-kubernetes-map-type: atomic
-                sendNotify:
-                  default: false
-                  type: boolean
-                sourceId:
-                  format: int64
-                  type: integer
-                sshkeys:
-                  description: a string list of public ssh keys
-                  items:
+                    type: object
+                  name:
                     type: string
-                  type: array
-                visibility:
+                  namespace:
+                    type: string
+                required:
+                - name
+                type: object
+              loginName:
+                type: string
+              password:
+                description: a secret reference to the secret where the password is
+                  stored
+                properties:
+                  key:
+                    description: The key of the secret to select from.  Must be a
+                      valid secret key.
+                    type: string
+                  name:
+                    default: ""
+                    description: |-
+                      Name of the referent.
+                      This field is effectively required, but due to backwards compatibility is
+                      allowed to be empty. Instances of this type with an empty value here are
+                      almost certainly wrong.
+                      More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    type: string
+                  optional:
+                    description: Specify whether the Secret or its key must be defined
+                    type: boolean
+                required:
+                - key
+                type: object
+                x-kubernetes-map-type: atomic
+              sendNotify:
+                default: false
+                type: boolean
+              sourceId:
+                format: int64
+                type: integer
+              sshkeys:
+                description: a string list of public ssh keys
+                items:
                   type: string
-              required:
-                - email
-                - instance
-              type: object
-            status:
-              description: UserStatus defines the observed state of User
-              properties:
-                provisioned:
-                  type: boolean
-              required:
-                - provisioned
-              type: object
-          type: object
-      served: true
-      storage: true
-      subresources:
-        status: {}
+                type: array
+              visibility:
+                type: string
+            required:
+            - email
+            - instance
+            type: object
+          status:
+            description: UserStatus defines the observed state of User
+            properties:
+              provisioned:
+                type: boolean
+            required:
+            - provisioned
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -1047,37 +1050,37 @@ metadata:
   name: gitea-operator-leader-election-role
   namespace: gitea-operator-system
 rules:
-  - apiGroups:
-      - ""
-    resources:
-      - configmaps
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-      - delete
-  - apiGroups:
-      - coordination.k8s.io
-    resources:
-      - leases
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-      - delete
-  - apiGroups:
-      - ""
-    resources:
-      - events
-    verbs:
-      - create
-      - patch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1087,24 +1090,24 @@ metadata:
     app.kubernetes.io/name: gitea-operator
   name: gitea-operator-auth-editor-role
 rules:
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - auths
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - auths/status
-    verbs:
-      - get
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - auths
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - auths/status
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1114,20 +1117,20 @@ metadata:
     app.kubernetes.io/name: gitea-operator
   name: gitea-operator-auth-viewer-role
 rules:
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - auths
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - auths/status
-    verbs:
-      - get
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - auths
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - auths/status
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1137,24 +1140,24 @@ metadata:
     app.kubernetes.io/name: gitea-operator
   name: gitea-operator-gitea-editor-role
 rules:
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - gitea
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - gitea/status
-    verbs:
-      - get
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - gitea
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - gitea/status
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1164,225 +1167,226 @@ metadata:
     app.kubernetes.io/name: gitea-operator
   name: gitea-operator-gitea-viewer-role
 rules:
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - gitea
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - gitea/status
-    verbs:
-      - get
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - gitea
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - gitea/status
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: gitea-operator-manager-role
 rules:
-  - apiGroups:
-      - ""
-    resources:
-      - endpoints
-    verbs:
-      - create
-      - delete
-      - deletecollection
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - ""
-    resources:
-      - events
-    verbs:
-      - create
-      - patch
-  - apiGroups:
-      - ""
-    resources:
-      - pods
-    verbs:
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - ""
-    resources:
-      - secrets
-      - serviceaccounts
-      - services
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - update
-      - watch
-  - apiGroups:
-      - acid.zalan.do
-    resources:
-      - postgresqls
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - apiextensions.k8s.io
-    resources:
-      - customresourcedefinitions
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - apps
-    resources:
-      - statefulsets
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - update
-      - watch
-  - apiGroups:
-      - cert-manager.io
-    resources:
-      - certificates
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - cert-manager.io
-    resources:
-      - clusterissuers
-      - issuers
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - auths
-      - gitea
-      - migraterepoes
-      - orgs
-      - repoes
-      - runners
-      - users
-      - valkeys
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - auths/finalizers
-      - gitea/finalizers
-      - migraterepoes/finalizers
-      - orgs/finalizers
-      - repoes/finalizers
-      - runners/finalizers
-      - users/finalizers
-    verbs:
-      - update
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - auths/status
-      - gitea/status
-      - migraterepoes/status
-      - orgs/status
-      - repoes/status
-      - runners/status
-      - users/status
-    verbs:
-      - get
-      - patch
-      - update
-  - apiGroups:
-      - monitoring.coreos.com
-    resources:
-      - servicemonitors
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - networking.k8s.io
-    resources:
-      - ingresses
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - policy
-    resources:
-      - poddisruptionbudgets
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - postgresql.cnpg.io
-    resources:
-      - clusters
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - rbac.authorization.k8s.io
-    resources:
-      - clusterrolebindings
-      - rolebindings
-      - roles
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - watch
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  - serviceaccounts
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - update
+  - watch
+- apiGroups:
+  - ""
+  - events.k8s.io
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - acid.zalan.do
+  resources:
+  - postgresqls
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - update
+  - watch
+- apiGroups:
+  - cert-manager.io
+  resources:
+  - certificates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - cert-manager.io
+  resources:
+  - clusterissuers
+  - issuers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - auths
+  - gitea
+  - migraterepoes
+  - orgs
+  - repoes
+  - runners
+  - users
+  - valkeys
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - auths/finalizers
+  - gitea/finalizers
+  - migraterepoes/finalizers
+  - orgs/finalizers
+  - repoes/finalizers
+  - runners/finalizers
+  - users/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - auths/status
+  - gitea/status
+  - migraterepoes/status
+  - orgs/status
+  - repoes/status
+  - runners/status
+  - users/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - servicemonitors
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - watch
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - postgresql.cnpg.io
+  resources:
+  - clusters
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - watch
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - clusterrolebindings
+  - rolebindings
+  - roles
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1392,18 +1396,18 @@ metadata:
     app.kubernetes.io/name: gitea-operator
   name: gitea-operator-migraterepo-admin-role
 rules:
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - migraterepoes
-    verbs:
-      - "*"
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - migraterepoes/status
-    verbs:
-      - get
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - migraterepoes
+  verbs:
+  - '*'
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - migraterepoes/status
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1413,24 +1417,24 @@ metadata:
     app.kubernetes.io/name: gitea-operator
   name: gitea-operator-migraterepo-editor-role
 rules:
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - migraterepoes
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - migraterepoes/status
-    verbs:
-      - get
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - migraterepoes
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - migraterepoes/status
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1440,20 +1444,20 @@ metadata:
     app.kubernetes.io/name: gitea-operator
   name: gitea-operator-migraterepo-viewer-role
 rules:
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - migraterepoes
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - migraterepoes/status
-    verbs:
-      - get
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - migraterepoes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - migraterepoes/status
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1463,24 +1467,24 @@ metadata:
     app.kubernetes.io/name: gitea-operator
   name: gitea-operator-org-editor-role
 rules:
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - orgs
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - orgs/status
-    verbs:
-      - get
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - orgs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - orgs/status
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1490,20 +1494,20 @@ metadata:
     app.kubernetes.io/name: gitea-operator
   name: gitea-operator-org-viewer-role
 rules:
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - orgs
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - orgs/status
-    verbs:
-      - get
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - orgs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - orgs/status
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1513,24 +1517,24 @@ metadata:
     app.kubernetes.io/name: gitea-operator
   name: gitea-operator-repo-editor-role
 rules:
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - repoes
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - repoes/status
-    verbs:
-      - get
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - repoes
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - repoes/status
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1540,20 +1544,20 @@ metadata:
     app.kubernetes.io/name: gitea-operator
   name: gitea-operator-repo-viewer-role
 rules:
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - repoes
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - repoes/status
-    verbs:
-      - get
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - repoes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - repoes/status
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1563,24 +1567,24 @@ metadata:
     app.kubernetes.io/name: gitea-operator
   name: gitea-operator-runner-editor-role
 rules:
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - runners
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - runners/status
-    verbs:
-      - get
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - runners
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - runners/status
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1590,20 +1594,20 @@ metadata:
     app.kubernetes.io/name: gitea-operator
   name: gitea-operator-runner-viewer-role
 rules:
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - runners
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - runners/status
-    verbs:
-      - get
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - runners
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - runners/status
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1613,24 +1617,24 @@ metadata:
     app.kubernetes.io/name: gitea-operator
   name: gitea-operator-user-editor-role
 rules:
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - users
-    verbs:
-      - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - users/status
-    verbs:
-      - get
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - users
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - users/status
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -1640,20 +1644,20 @@ metadata:
     app.kubernetes.io/name: gitea-operator
   name: gitea-operator-user-viewer-role
 rules:
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - users
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - hyperspike.io
-    resources:
-      - users/status
-    verbs:
-      - get
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - users
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - hyperspike.io
+  resources:
+  - users/status
+  verbs:
+  - get
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1668,9 +1672,9 @@ roleRef:
   kind: Role
   name: gitea-operator-leader-election-role
 subjects:
-  - kind: ServiceAccount
-    name: gitea-operator-controller-manager
-    namespace: gitea-operator-system
+- kind: ServiceAccount
+  name: gitea-operator-controller-manager
+  namespace: gitea-operator-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -1684,9 +1688,9 @@ roleRef:
   kind: ClusterRole
   name: gitea-operator-manager-role
 subjects:
-  - kind: ServiceAccount
-    name: gitea-operator-controller-manager
-    namespace: gitea-operator-system
+- kind: ServiceAccount
+  name: gitea-operator-controller-manager
+  namespace: gitea-operator-system
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -1710,37 +1714,37 @@ spec:
         control-plane: controller-manager
     spec:
       containers:
-        - args:
-            - --leader-elect=false
-            - --health-probe-bind-address=:8081
-          command:
-            - /manager
-          image: ghcr.io/logunov/gitea-operator:latest
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 8081
-            initialDelaySeconds: 15
-            periodSeconds: 20
-          name: manager
-          readinessProbe:
-            httpGet:
-              path: /readyz
-              port: 8081
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          resources:
-            limits:
-              cpu: 500m
-              memory: 128Mi
-            requests:
-              cpu: 10m
-              memory: 64Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
+      - args:
+        - --leader-elect=false
+        - --health-probe-bind-address=:8081
+        command:
+        - /manager
+        image: ghcr.io/logunov/gitea-operator:latest
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        name: manager
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
       securityContext:
         runAsNonRoot: true
       serviceAccountName: gitea-operator-controller-manager

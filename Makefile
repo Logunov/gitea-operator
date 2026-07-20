@@ -1,5 +1,5 @@
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+IMG ?= ghcr.io/logunov/gitea-operator:latest
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
@@ -142,8 +142,14 @@ docker-buildx: ## Build and push docker image for the manager for cross-platform
 .PHONY: build-installer
 build-installer: manifests generate kustomize ## Generate a consolidated YAML with CRDs and deployment.
 	mkdir -p dist
+	cp config/manager/kustomization.yaml config/manager/kustomization.yaml.bak
 	cd config/manager && $(KUSTOMIZE) edit set image controller=${IMG}
 	$(KUSTOMIZE) build config/default > dist/install.yaml
+	mv config/manager/kustomization.yaml.bak config/manager/kustomization.yaml
+
+.PHONY: check-installer
+check-installer: build-installer ## Verify installer is in sync with sources
+	git diff --exit-code -- dist/install.yaml
 
 ##@ Deployment
 
