@@ -116,6 +116,7 @@ type GiteaReconciler struct {
 // +kubebuilder:rbac:groups=cert-manager.io,resources=certificates,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups="",resources=serviceaccounts;secrets;services,verbs=create;delete;get;list;watch;update
 // +kubebuilder:rbac:groups="",resources=pods,verbs=get;list;patch;update;watch;delete
+// +kubebuilder:rbac:groups="",resources=persistentvolumeclaims,verbs=get;list;watch;update
 // +kubebuilder:rbac:groups="",resources=endpoints,verbs=create;delete;deletecollection;get;list;patch;update;watch
 // +kubebuilder:rbac:groups=apps,resources=statefulsets,verbs=create;delete;get;list;watch;update
 // +kubebuilder:rbac:groups=rbac.authorization.k8s.io,resources=clusterrolebindings,verbs=create;delete;get;list;watch
