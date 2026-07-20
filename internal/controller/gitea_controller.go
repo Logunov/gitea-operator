@@ -621,15 +621,30 @@ func labels(name string) map[string]string {
 	}
 }
 
+func parseStorageSize(value, defaultSize string) (resource.Quantity, error) {
+	if value == "" {
+		value = defaultSize
+	}
+	return resource.ParseQuantity(value)
+}
+
 // upsertCNPG - Create or update a CNPG cluster {{{
 func (r *GiteaReconciler) upsertCNPG(ctx context.Context, gitea *hyperv1.Gitea) error {
 	logger := log.FromContext(ctx)
 	l := labels(gitea.Name)
 	l["app.kubernetes.io/component"] = DATABASE
 
-	dbSize := "1Gi"
-	if gitea.Spec.Storage != nil && gitea.Spec.Storage.DatabaseSize != "" {
+	dbSize := ""
+	if gitea.Spec.Storage != nil {
 		dbSize = gitea.Spec.Storage.DatabaseSize
+	}
+	if _, err := parseStorageSize(dbSize, "1Gi"); err != nil {
+		r.Recorder.Eventf(gitea, nil, corev1.EventTypeWarning, "InvalidStorage",
+			"InvalidStorage", "Invalid databaseSize %q: %v", dbSize, err)
+		return err
+	}
+	if dbSize == "" {
+		dbSize = "1Gi"
 	}
 
 	cnpg := &cnpgv1.Cluster{
@@ -674,8 +689,30 @@ func (r *GiteaReconciler) upsertCNPG(ctx context.Context, gitea *hyperv1.Gitea) 
 			logger.Error(err, "failed to create CNPG cluster")
 			return err
 		}
-	} else {
+	} else if err != nil {
 		return err
+	} else {
+		// CNPG cluster exists — expand storage if needed
+		existingSize := cnpg.Spec.StorageConfiguration.Size
+		if dbSize != existingSize {
+			existingQty, err := resource.ParseQuantity(existingSize)
+			if err != nil {
+				logger.Info("cannot parse existing CNPG storage, skipping", "size", existingSize, "error", err)
+				return nil
+			}
+			desiredQty, _ := resource.ParseQuantity(dbSize)
+			if desiredQty.Cmp(existingQty) > 0 {
+				cnpg.Spec.StorageConfiguration.Size = dbSize
+				if err := r.Update(ctx, cnpg); err != nil {
+					logger.Error(err, "failed to update CNPG storage")
+					return err
+				}
+				r.Recorder.Eventf(gitea, nil, corev1.EventTypeNormal, "Expanding",
+					"CNPGExpanding", "CNPG Cluster %s storage expanding from %s to %s", gitea.Name+"-db", existingSize, dbSize)
+			} else if desiredQty.Cmp(existingQty) < 0 {
+				logger.Info("ignoring CNPG storage shrink request", "desired", dbSize, "existing", existingSize)
+			}
+		}
 	}
 	return nil
 }
@@ -716,9 +753,17 @@ func (r *GiteaReconciler) upsertPG(ctx context.Context, gitea *hyperv1.Gitea) er
 	l := labels(gitea.Name)
 	l["app.kubernetes.io/component"] = DATABASE
 
-	dbSize := "1Gi"
-	if gitea.Spec.Storage != nil && gitea.Spec.Storage.DatabaseSize != "" {
+	dbSize := ""
+	if gitea.Spec.Storage != nil {
 		dbSize = gitea.Spec.Storage.DatabaseSize
+	}
+	if _, err := parseStorageSize(dbSize, "1Gi"); err != nil {
+		r.Recorder.Eventf(gitea, nil, corev1.EventTypeWarning, "InvalidStorage",
+			"InvalidStorage", "Invalid databaseSize %q: %v", dbSize, err)
+		return err
+	}
+	if dbSize == "" {
+		dbSize = "1Gi"
 	}
 
 	pg := &zalandov1.Postgresql{
@@ -815,8 +860,30 @@ func (r *GiteaReconciler) upsertPG(ctx context.Context, gitea *hyperv1.Gitea) er
 			logger.Error(err, "failed to create postgres")
 			return err
 		}
-	} else {
+	} else if err != nil {
 		return err
+	} else {
+		// Postgres cluster exists — expand storage if needed
+		existingSize := pg.Spec.Volume.Size
+		if dbSize != existingSize {
+			existingQty, err := resource.ParseQuantity(existingSize)
+			if err != nil {
+				logger.Info("cannot parse existing PG storage, skipping", "size", existingSize, "error", err)
+				return nil
+			}
+			desiredQty, _ := resource.ParseQuantity(dbSize)
+			if desiredQty.Cmp(existingQty) > 0 {
+				pg.Spec.Volume.Size = dbSize
+				if err := r.Update(ctx, pg); err != nil {
+					logger.Error(err, "failed to update PG storage")
+					return err
+				}
+				r.Recorder.Eventf(gitea, nil, corev1.EventTypeNormal, "Expanding",
+					"PGExpanding", "Postgres %s storage expanding from %s to %s", gitea.Name+"-"+gitea.Name, existingSize, dbSize)
+			} else if desiredQty.Cmp(existingQty) < 0 {
+				logger.Info("ignoring PG storage shrink request", "desired", dbSize, "existing", existingSize)
+			}
+		}
 	}
 	return nil
 }
@@ -2068,11 +2135,16 @@ func (r *GiteaReconciler) upsertPDB(ctx context.Context, gitea *hyperv1.Gitea) e
 
 func (r *GiteaReconciler) upsertGiteaSts(ctx context.Context, gitea *hyperv1.Gitea) error {
 	logger := log.FromContext(ctx)
-	giteaSize := "1Gi"
-	if gitea.Spec.Storage != nil && gitea.Spec.Storage.GiteaSize != "" {
+	giteaSize := ""
+	if gitea.Spec.Storage != nil {
 		giteaSize = gitea.Spec.Storage.GiteaSize
 	}
-	disk := resource.MustParse(giteaSize)
+	disk, err := parseStorageSize(giteaSize, "1Gi")
+	if err != nil {
+		r.Recorder.Eventf(gitea, nil, corev1.EventTypeWarning, "InvalidStorage",
+			"InvalidStorage", "Invalid giteaSize %q: %v", giteaSize, err)
+		return err
+	}
 	scheme := corev1.URISchemeHTTP
 	if gitea.Spec.TLS {
 		scheme = corev1.URISchemeHTTPS
@@ -2438,7 +2510,7 @@ func (r *GiteaReconciler) upsertGiteaSts(ctx context.Context, gitea *hyperv1.Git
 	if err := controllerutil.SetControllerReference(gitea, sts, r.Scheme); err != nil {
 		return err
 	}
-	err := r.Get(ctx, types.NamespacedName{Name: gitea.Name, Namespace: gitea.Namespace}, sts)
+	err = r.Get(ctx, types.NamespacedName{Name: gitea.Name, Namespace: gitea.Namespace}, sts)
 	if err != nil && errors.IsNotFound(err) {
 		r.Recorder.Eventf(gitea, nil, corev1.EventTypeNormal, "Creating",
 			"StatefulSetCreate", "StatefulSet %s is being created", gitea.Name)
@@ -2446,8 +2518,31 @@ func (r *GiteaReconciler) upsertGiteaSts(ctx context.Context, gitea *hyperv1.Git
 			logger.Error(err, "failed to create statefulset")
 			return err
 		}
-	} else {
+	} else if err != nil {
 		return err
+	} else {
+		// StatefulSet exists — expand PVC if needed
+		pvcName := "data-" + gitea.Name + "-0"
+		pvc := &corev1.PersistentVolumeClaim{}
+		if err := r.Get(ctx, types.NamespacedName{Name: pvcName, Namespace: gitea.Namespace}, pvc); err != nil {
+			logger.Error(err, "failed to get PVC for expansion", "pvc", pvcName)
+			return err
+		}
+		existing, ok := pvc.Spec.Resources.Requests[corev1.ResourceStorage]
+		if !ok {
+			return nil
+		}
+		if disk.Cmp(existing) > 0 {
+			pvc.Spec.Resources.Requests[corev1.ResourceStorage] = disk
+			if err := r.Update(ctx, pvc); err != nil {
+				logger.Error(err, "failed to expand PVC")
+				return err
+			}
+			r.Recorder.Eventf(gitea, nil, corev1.EventTypeNormal, "Expanding",
+				"PVCExpanding", "PVC %s expanding from %s to %s", pvcName, existing.String(), disk.String())
+		} else if disk.Cmp(existing) < 0 {
+			logger.Info("ignoring PVC shrink request", "pvc", pvcName, "desired", disk.String(), "existing", existing.String())
+		}
 	}
 	return nil
 }
