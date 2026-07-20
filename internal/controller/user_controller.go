@@ -221,6 +221,13 @@ func (r *UserReconciler) upsertUser(ctx context.Context, user *hyperv1.User) err
 		return err
 	}
 
+	if _, err = r.h.AdminEditUser(user.Name, g.EditUserOption{
+		Active: ptrBool(true),
+	}); err != nil {
+		logger.Error(err, "failed to activate user", "user", user.Name)
+		return err
+	}
+
 	if err := r.reconcileSSHKeys(user); err != nil {
 		logger.Error(err, "failed to add ssh keys", "user", user.Name)
 		return err
