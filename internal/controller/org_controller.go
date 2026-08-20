@@ -108,7 +108,7 @@ func (r *OrgReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 		website = "https://" + gitea.Spec.Ingress.Host + "/" + org.Name
 	}
 	want := &g.Organization{
-		UserName:    org.Name,
+		Name:        org.Name,
 		FullName:    org.Spec.FullName,
 		Description: org.Spec.Description,
 		Website:     website,

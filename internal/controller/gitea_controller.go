@@ -208,13 +208,13 @@ func (r *GiteaReconciler) reconcileGitea(ctx context.Context, gitea *hyperv1.Git
 		}
 		vkUp, _ := r.valkeyRunning(ctx, gitea)
 		if !vkUp {
-			return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, nil
+			return ctrl.Result{RequeueAfter: time.Second * 5}, nil
 		}
 	}
 	// spool up valkey and postgres in parallel
 	pgUp, _ := r.pgRunning(ctx, gitea)
 	if !pgUp {
-		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, nil
+		return ctrl.Result{RequeueAfter: time.Second * 5}, nil
 	}
 	if gitea.Spec.TLS {
 		if err := r.upsertCertificate(ctx, gitea); err != nil {
@@ -599,7 +599,7 @@ echo '==== END GITEA CONFIGURATION ===='`,
 
 	up, _ := r.podUP(ctx, gitea)
 	if !up {
-		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, nil
+		return ctrl.Result{RequeueAfter: time.Second * 5}, nil
 	}
 	logger.Info("pod up", "sts", gitea.Name)
 	if !r.apiUP(ctx, gitea) {
