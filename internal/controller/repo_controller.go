@@ -19,7 +19,6 @@ package controller
 import (
 	"context"
 	"fmt"
-	"time"
 
 	g "code.gitea.io/sdk/gitea"
 	hclient "hyperspike.io/gitea-operator/internal/client"
@@ -73,7 +72,7 @@ func (r *RepoReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		return ctrl.Result{}, err
 	}
 	if h == nil && gitea == nil {
-		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, fmt.Errorf("failed to get gitea client")
+		return ctrl.Result{}, fmt.Errorf("failed to get gitea client")
 	}
 	r.h = h
 
@@ -81,11 +80,11 @@ func (r *RepoReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	if isRepoMarkedToBeDeleted {
 		if controllerutil.ContainsFinalizer(repo, repoFinalizer) {
 			if err := r.deleteRepo(repo); err != nil {
-				return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, err
+				return ctrl.Result{}, err
 			}
 			controllerutil.RemoveFinalizer(repo, repoFinalizer)
 			if err := r.Update(ctx, repo); err != nil {
-				return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, err
+				return ctrl.Result{}, err
 			}
 		}
 		return ctrl.Result{}, nil
@@ -104,13 +103,13 @@ func (r *RepoReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	if repo.Spec.Org != nil {
 		gRepo, resp, err := r.h.GetRepo(repo.Spec.Org.Name, repo.Name)
 		if err != nil && resp.StatusCode != 404 {
-			return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, err
+			return ctrl.Result{}, err
 		}
 		if resp.StatusCode == 200 {
 			if !compareRepo(want, gRepo) {
 				logger.Info("updating repo")
 				if _, _, err := r.h.EditRepo(repo.Spec.Org.Name, repo.Name, g.EditRepoOption{}); err != nil {
-					return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, err
+					return ctrl.Result{}, err
 				}
 			}
 		}
@@ -128,7 +127,7 @@ func (r *RepoReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 			IssueLabels:   repo.Spec.IssueLabels,
 		})
 		if err != nil {
-			return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, err
+			return ctrl.Result{}, err
 		}
 		if repo.Spec.Mirror != nil && repo.Spec.Mirror.RemoteURL != "" {
 			_, _, err = r.h.PushMirrors(repo.Spec.Org.Name, repo.Name, g.CreatePushMirrorOption{
@@ -146,7 +145,7 @@ func (r *RepoReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 			repo.Status.Provisioned = true
 			if err := r.Client.Status().Update(ctx, repo); err != nil {
 				logger.Error(err, "Failed to update Repo status")
-				return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, err
+				return ctrl.Result{}, err
 			}
 		}
 		if !controllerutil.ContainsFinalizer(repo, repoFinalizer) {

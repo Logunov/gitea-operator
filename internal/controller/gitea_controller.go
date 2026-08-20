@@ -603,11 +603,11 @@ echo '==== END GITEA CONFIGURATION ===='`,
 	}
 	logger.Info("pod up", "sts", gitea.Name)
 	if !r.apiUP(ctx, gitea) {
-		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, nil
+		return ctrl.Result{RequeueAfter: time.Second * 5}, nil
 	}
 	logger.Info("api is up", "sts", gitea.Name)
 	if err := r.adminToken(ctx, gitea); err != nil {
-		return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, nil
+		return ctrl.Result{RequeueAfter: time.Second * 5}, nil
 	}
 
 	return ctrl.Result{}, nil

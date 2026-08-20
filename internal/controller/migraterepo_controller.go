@@ -19,7 +19,6 @@ package controller
 import (
 	"context"
 	"fmt"
-	"time"
 
 	g "code.gitea.io/sdk/gitea"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -68,7 +67,7 @@ func (r *MigrateRepoReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		return ctrl.Result{}, err
 	}
 	if h == nil || gitea == nil {
-		return ctrl.Result{Requeue: true, RequeueAfter: 10 * time.Second}, fmt.Errorf("missing Gitea client")
+		return ctrl.Result{}, fmt.Errorf("missing Gitea client")
 	}
 	r.h = h
 	isRepoMarkedToBeDeleted := repo.GetDeletionTimestamp() != nil
@@ -76,11 +75,11 @@ func (r *MigrateRepoReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		if controllerutil.ContainsFinalizer(repo, repoFinalizer) {
 			logger.Info("Deleting migrated repo", "repo", repo.Name)
 			if err := r.deleteRepo(repo); err != nil {
-				return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, err
+				return ctrl.Result{}, err
 			}
 			controllerutil.RemoveFinalizer(repo, repoFinalizer)
 			if err := r.Update(ctx, repo); err != nil {
-				return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, err
+				return ctrl.Result{}, err
 			}
 		}
 		return ctrl.Result{}, nil
@@ -88,7 +87,7 @@ func (r *MigrateRepoReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	if repo.Spec.Org != nil {
 		gRepo, resp, err := r.h.GetRepo(repo.Spec.Org.Name, repo.Name)
 		if err != nil && resp.StatusCode != 404 {
-			return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, err
+			return ctrl.Result{}, err
 		}
 		if resp.StatusCode == 200 {
 			logger.Info("Repo already exists, skipping migration", "repo", gRepo.FullName)
@@ -97,7 +96,7 @@ func (r *MigrateRepoReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		logger.Info("creating migrate repos")
 		serviceType, err := lookupGitService(repo.Spec.Service)
 		if err != nil {
-			return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, err
+			return ctrl.Result{}, err
 		}
 		_, _, err = r.h.MigrateRepo(g.MigrateRepoOption{
 			RepoName:    repo.Name,
@@ -109,7 +108,7 @@ func (r *MigrateRepoReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 			Mirror:      repo.Spec.Mirror,
 		})
 		if err != nil {
-			return ctrl.Result{Requeue: true, RequeueAfter: time.Second * 5}, err
+			return ctrl.Result{}, err
 		}
 		if !controllerutil.ContainsFinalizer(repo, repoFinalizer) {
 			controllerutil.AddFinalizer(repo, repoFinalizer)
