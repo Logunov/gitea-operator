@@ -14,7 +14,7 @@ require (
 	github.com/cloudnative-pg/cloudnative-pg v1.30.0
 	github.com/minio/minio-go/v7 v7.3.0
 	github.com/onsi/ginkgo/v2 v2.32.2
-	github.com/onsi/gomega v1.43.0
+	github.com/onsi/gomega v1.43.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.94.0
 	github.com/zalando/postgres-operator v1.15.1
 	google.golang.org/api v0.298.0
