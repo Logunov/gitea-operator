@@ -5,7 +5,7 @@ go 1.26.6
 require (
 	cloud.google.com/go/compute/metadata v0.10.0
 	cloud.google.com/go/iam v1.15.0
-	cloud.google.com/go/storage v1.69.0
+	cloud.google.com/go/storage v1.70.0
 	code.gitea.io/sdk/gitea v0.25.1
 	github.com/aws/aws-sdk-go-v2/config v1.33.9
 	github.com/aws/aws-sdk-go-v2/service/iam v1.64.4
@@ -17,7 +17,7 @@ require (
 	github.com/onsi/gomega v1.44.0
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.94.2
 	github.com/zalando/postgres-operator v1.15.1
-	google.golang.org/api v0.305.0
+	google.golang.org/api v0.307.0
 	hyperspike.io/valkey-operator v0.0.61
 	k8s.io/api v0.37.1
 	k8s.io/apiextensions-apiserver v0.37.1
@@ -29,7 +29,7 @@ require (
 require (
 	cel.dev/expr v0.25.2 // indirect
 	cloud.google.com/go v0.123.0 // indirect
-	cloud.google.com/go/auth v0.24.1-0.20261001053825-dbc26066f70a // indirect
+	cloud.google.com/go/auth v0.24.1 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.3.0 // indirect
 	cloud.google.com/go/monitoring v1.30.0 // indirect
 	github.com/42wim/httpsig v1.2.4 // indirect
@@ -154,7 +154,7 @@ require (
 	gomodules.xyz/jsonpatch/v2 v2.5.0 // indirect
 	google.golang.org/genproto v0.0.0-20260715232425-e75dac1f907d // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260803160001-6ac0973c030d // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20261005182115-fad411399dd8 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20261019180522-ce908d29299b // indirect
 	google.golang.org/grpc v1.84.0 // indirect
 	google.golang.org/protobuf v1.36.12 // indirect
 	gopkg.in/evanphx/json-patch.v4 v4.13.0 // indirect
